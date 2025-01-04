@@ -32,6 +32,10 @@ $ pnpm run start:prod
 
 ## Run tests
 
+You can import the [library-api.postman_collection.json](library-api.postman_collection.json) file into Postman to test the API.
+
+**Note:** You need to set the `API_URL` environment variable in the Postman collection to the URL where the API is running. default is `http://localhost:3000` and after login in auth folder, you don't need to set the `Authorization` header manually, it will be set automatically.
+
 ```bash
 # unit tests
 $ pnpm run test

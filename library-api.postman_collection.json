@@ -1,0 +1,741 @@
+{
+	"info": {
+		"_postman_id": "fbd22e2f-52d8-42a1-907f-21b4899f0893",
+		"name": "library-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "15224743"
+	},
+	"item": [
+		{
+			"name": "books",
+			"item": [
+				{
+					"name": "all",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content type is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Data array is present in the response\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.data).to.exist.and.to.be.an('array');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Validate the data object structure\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.data).to.be.an('array').that.is.not.empty;",
+									"    ",
+									"    responseData.data.forEach(function(book) {",
+									"        pm.expect(book).to.have.property('_id').that.is.a('string');",
+									"        pm.expect(book).to.have.property('title').that.is.a('string');",
+									"        pm.expect(book).to.have.property('author').that.is.a('string');",
+									"        pm.expect(book).to.have.property('createdBy').that.is.a('string');",
+									"        pm.expect(book).to.have.property('reviews').that.is.an('array');",
+									"        pm.expect(book).to.have.property('createdAt').that.is.a('string');",
+									"        pm.expect(book).to.have.property('updatedAt').that.is.a('string');",
+									"        pm.expect(book).to.have.property('__v').that.is.a('number');",
+									"    });",
+									"});",
+									"",
+									"",
+									"pm.test(\"Verify pagination object structure and properties\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.pagination).to.exist.and.to.be.an('object');",
+									"    pm.expect(responseData.pagination.totalPages).to.exist.and.to.be.a('number');",
+									"    pm.expect(responseData.pagination.hasNextPage).to.exist.and.to.be.a('boolean');",
+									"    pm.expect(responseData.pagination.hasPrevPage).to.exist.and.to.be.a('boolean');",
+									"    pm.expect(responseData.pagination.nextPage).to.exist.and.to.be.null;",
+									"    pm.expect(responseData.pagination.prevPage).to.exist.and.to.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/books?limit=10&sortBy=title&sortOrder=desc",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"books"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "sortBy",
+									"value": "title"
+								},
+								{
+									"key": "sortOrder",
+									"value": "desc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "top-rated",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content-Type is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Validate the data object in the response\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.data).to.exist.and.to.be.an('array');",
+									"  pm.expect(responseData.data).to.have.length.above(0);",
+									"  responseData.data.forEach(function(book) {",
+									"    pm.expect(book).to.have.property('_id').that.is.a('string');",
+									"    pm.expect(book).to.have.property('title').that.is.a('string');",
+									"    pm.expect(book).to.have.property('author').that.is.a('string');",
+									"    pm.expect(book).to.have.property('createdBy').that.is.a('string');",
+									"    pm.expect(book).to.have.property('reviews').that.is.an('array').and.to.have.lengthOf.at.least(1);",
+									"    book.reviews.forEach(function(review) {",
+									"      pm.expect(review).to.have.property('userId').that.is.a('string');",
+									"      pm.expect(review).to.have.property('rating').that.is.a('number');",
+									"      pm.expect(review).to.have.property('comment').that.is.a('string');",
+									"      pm.expect(review).to.have.property('createdAt').that.is.a('string');",
+									"      pm.expect(review).to.have.property('_id').that.is.a('string');",
+									"    });",
+									"    pm.expect(book).to.have.property('createdAt').that.is.a('string');",
+									"    pm.expect(book).to.have.property('updatedAt').that.is.a('string');",
+									"    pm.expect(book).to.have.property('__v').that.is.a('number');",
+									"    pm.expect(book).to.have.property('averageRating').that.is.a('number');",
+									"  });",
+									"});",
+									"",
+									"",
+									"pm.test(\"Data array is present and contains the expected number of elements\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.data).to.exist.and.to.be.an('array').with.lengthOf(1);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Validate the data array properties\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.data).to.be.an('array');",
+									"    ",
+									"    responseData.data.forEach(function(book) {",
+									"        pm.expect(book).to.have.property('title').that.is.a('string');",
+									"        pm.expect(book).to.have.property('author').that.is.a('string');",
+									"        pm.expect(book).to.have.property('createdBy').that.is.a('string');",
+									"        pm.expect(book).to.have.property('createdAt').that.is.a('string');",
+									"        pm.expect(book).to.have.property('updatedAt').that.is.a('string');",
+									"        pm.expect(book).to.have.property('averageRating').that.is.a('number');",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/books/top-rated?limit=10",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"books",
+								"top-rated"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "search",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"  pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.data).to.be.an('array');",
+									"    ",
+									"    responseData.data.forEach(function(book) {",
+									"        pm.expect(book).to.have.property('_id');",
+									"        pm.expect(book).to.have.property('title');",
+									"        pm.expect(book).to.have.property('author');",
+									"        pm.expect(book).to.have.property('category');",
+									"        pm.expect(book).to.have.property('createdBy');",
+									"        pm.expect(book).to.have.property('reviews');",
+									"        pm.expect(book).to.have.property('createdAt');",
+									"        pm.expect(book).to.have.property('updatedAt');",
+									"        pm.expect(book).to.have.property('__v');",
+									"        pm.expect(book).to.have.property('averageRating');",
+									"    });",
+									"});",
+									"",
+									"",
+									"pm.test(\"Timestamp is in valid date format\", function () {",
+									"  const responseData = pm.response.json();",
+									"",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.timestamp).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$/, \"Timestamp should be in valid date format\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Data array is present and contains the expected number of elements\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.data).to.exist.and.to.be.an('array');",
+									"    pm.expect(responseData.data).to.have.lengthOf(1);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Validate data object properties\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    ",
+									"    responseData.data.forEach(function(book) {",
+									"        pm.expect(book.title).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Title should not be empty\");",
+									"        pm.expect(book.author).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Author should not be empty\");",
+									"        pm.expect(book.category).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Category should not be empty\");",
+									"        pm.expect(book.averageRating).to.be.a('number').and.to.satisfy((num) => num >= 0, \"Average rating should be a non-negative integer\");",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/books/search?sortBy=rating&sortOrder=asc&category=jd",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"books",
+								"search"
+							],
+							"query": [
+								{
+									"key": "sortBy",
+									"value": "rating"
+								},
+								{
+									"key": "sortOrder",
+									"value": "asc"
+								},
+								{
+									"key": "category",
+									"value": "jd"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"hello 10\",\n    \"author\": \"hello\",\n    \"category\": \"jdjdjd\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{API_URL}}/books"
+					},
+					"response": []
+				},
+				{
+					"name": "review",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"comment\": \"Good book\",\n    \"rating\": 5\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{API_URL}}/books/6778789d667491880f9e89ce/review"
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Validate the data object\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData.data).to.exist;",
+									"  pm.expect(responseData.data).to.be.an('object');",
+									"  pm.expect(responseData.data._id).to.exist.and.to.be.a('string');",
+									"  pm.expect(responseData.data.title).to.exist.and.to.be.a('string');",
+									"  pm.expect(responseData.data.author).to.exist.and.to.be.a('string');",
+									"  pm.expect(responseData.data.createdBy).to.exist.and.to.be.a('string');",
+									"  pm.expect(responseData.data.reviews).to.exist.and.to.be.an('array');",
+									"  responseData.data.reviews.forEach(function(review) {",
+									"    pm.expect(review.userId).to.exist.and.to.be.a('string');",
+									"    pm.expect(review.rating).to.exist.and.to.be.a('number');",
+									"    pm.expect(review.comment).to.exist.and.to.be.a('string');",
+									"    pm.expect(review.createdAt).to.exist.and.to.be.a('string');",
+									"    pm.expect(review._id).to.exist.and.to.be.a('string');",
+									"  });",
+									"  pm.expect(responseData.data.createdAt).to.exist.and.to.be.a('string');",
+									"  pm.expect(responseData.data.updatedAt).to.exist.and.to.be.a('string');",
+									"  pm.expect(responseData.data.__v).to.exist.and.to.be.a('number');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Reviews array contains expected fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.data.reviews).to.be.an('array');",
+									"    responseData.data.reviews.forEach(function(review) {",
+									"        pm.expect(review.userId).to.be.a('string');",
+									"        pm.expect(review.rating).to.be.a('number');",
+									"        pm.expect(review.comment).to.be.a('string');",
+									"        pm.expect(review.createdAt).to.exist;",
+									"    });",
+									"});",
+									"",
+									"",
+									"pm.test(\"Timestamp is in a valid date format\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData.timestamp).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$/);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Ensure that the statusCode is present and has a value of 0\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.have.property('statusCode', 0);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"hello 2\",\n    \"author\": \"hello\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{API_URL}}/books/67787637aaf84967b8cad794"
+					},
+					"response": []
+				},
+				{
+					"name": "find by id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content type is application/json\", function () {",
+									"  pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Validate the data object\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.data).to.exist.and.to.be.an('object');",
+									"  pm.expect(responseData.data._id).to.exist.and.to.be.a('string');",
+									"  pm.expect(responseData.data.title).to.exist.and.to.be.a('string');",
+									"  pm.expect(responseData.data.author).to.exist.and.to.be.a('string');",
+									"  pm.expect(responseData.data.category).to.exist.and.to.be.a('string');",
+									"  pm.expect(responseData.data.createdBy).to.exist.and.to.be.a('string');",
+									"  pm.expect(responseData.data.reviews).to.exist.and.to.be.an('array');",
+									"  pm.expect(responseData.data.createdAt).to.exist.and.to.be.a('string');",
+									"  pm.expect(responseData.data.updatedAt).to.exist.and.to.be.a('string');",
+									"  pm.expect(responseData.data.__v).to.exist.and.to.be.a('number');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Reviews array should be empty\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.data.reviews).to.be.an('array').that.is.empty;",
+									"});",
+									"",
+									"",
+									"pm.test(\"CreatedAt and UpdatedAt fields are in a valid date format\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.data.createdAt).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$/, \"CreatedAt should be in valid date format\");",
+									"    pm.expect(responseData.data.updatedAt).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$/, \"UpdatedAt should be in valid date format\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{API_URL}}/books/677887c2f4dbe02776decedd"
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"  pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Validate the data object\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.data).to.exist.and.to.be.an('object');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Verify that title, author, category, and createdBy fields are empty strings\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.data).to.be.an('object');",
+									"    pm.expect(responseData.data.title).to.equal(\"\");",
+									"    pm.expect(responseData.data.author).to.equal(\"\");",
+									"    pm.expect(responseData.data.category).to.equal(\"\");",
+									"    pm.expect(responseData.data.createdBy).to.equal(\"\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Reviews array should be empty\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.have.property('data');",
+									"  pm.expect(responseData.data.reviews).to.be.an('array').that.is.empty;",
+									"});",
+									"",
+									"",
+									"pm.test(\"CreatedAt and UpdatedAt fields are in valid date format\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.have.property('data');",
+									"    pm.expect(responseData.data).to.have.property('createdAt').that.is.a('string').and.to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$/);",
+									"    pm.expect(responseData.data).to.have.property('updatedAt').that.is.a('string').and.to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$/);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{API_URL}}/books/677887c2f4dbe02776decedd"
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"pm.test(\"Response status code is 200\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content type is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Data object should exist and be an object\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.data).to.exist.and.to.be.an('object');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Access token should not be empty\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData.data.access_token).to.exist.and.to.not.be.empty;",
+									"});",
+									"",
+									"",
+									"pm.test(\"Timestamp is in a valid date format\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.timestamp).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$/, \"Timestamp should be in valid date format\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"jcoly165@gmail.com\",\n    \"password\": \"charo2002\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{API_URL}}/auth/login"
+					},
+					"response": []
+				},
+				{
+					"name": "register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"pm.test(\"Response status code is 400\", function () {",
+									"    pm.expect(pm.response.code).to.equal(400);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData).to.have.property('statusCode');",
+									"    pm.expect(responseData).to.have.property('timestamp');",
+									"    pm.expect(responseData).to.have.property('path');",
+									"    pm.expect(responseData).to.have.property('message');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Timestamp is in a valid date format\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.timestamp).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$/);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Path is a non-empty string\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.path).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Message is a non-empty string\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"jcoly165@gmail.com\",\n    \"password\": \"charo2002\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{API_URL}}/auth/register"
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							"if ((pm.response.code === 201 || pm.response.code === 200) && pm.response.json()) {",
+							"    let responseData = pm.response.json();",
+							"    if (!responseData.data.access_token) return",
+							"    pm.globals.set(\"TOKEN\", responseData.data.access_token);",
+							"    console.log(\"TOKEN ajouté à l'environnement :\", responseData.data.access_token);",
+							"}"
+						]
+					}
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": {
+			"token": "{{TOKEN}}"
+		}
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "API_URL",
+			"value": "http://localhost:3000/api",
+			"type": "string"
+		}
+	]
+}
