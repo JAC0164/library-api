@@ -26,12 +26,12 @@ export class TransformResponseInterceptor implements NestInterceptor {
     return next.handle().pipe(
       map((data) => {
         const res: AppResponse<any> = {
-          data: data.data ? data.data : data,
+          data: data?.data ? data?.data : data,
           statusCode: context.switchToHttp().getResponse().statusCode,
           timestamp: new Date().toISOString(),
         };
 
-        if (data.pagination) res.pagination = data.pagination;
+        if (data?.pagination) res.pagination = data?.pagination;
 
         return res;
       }),
